@@ -1,0 +1,904 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ScholarSync | Student Utility & Document Hub</title>
+  
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  
+  <!-- FontAwesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  
+  <!-- CSS Stylesheet -->
+  <link rel="stylesheet" href="style.css">
+  
+  <!-- Web App Manifest -->
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#6366f1">
+</head>
+<body>
+  <div class="app-container">
+    
+    <!-- Sidebar Navigation -->
+    <aside class="sidebar">
+      <div class="sidebar-header">
+        <div class="logo">
+          <i class="fa-solid fa-graduation-cap logo-icon"></i>
+          <span class="logo-text">ScholarSync</span>
+        </div>
+      </div>
+      
+      <nav class="sidebar-menu">
+        <div class="menu-section">Document Tools</div>
+        <a href="#" class="menu-item active" data-tab="pdf-word">
+          <i class="fa-solid fa-file-word"></i>
+          <span>PDF &leftrightarrow; Word</span>
+        </a>
+        <a href="#" class="menu-item" data-tab="ats-checker">
+          <i class="fa-solid fa-ban text-red"></i>
+          <span>Resume ATS Checker</span>
+        </a>
+        <a href="#" class="menu-item" data-tab="simplifier">
+          <i class="fa-solid fa-language text-blue"></i>
+          <span>Simple English Translator</span>
+        </a>
+        
+        <div class="menu-section">Media Tools</div>
+        <a href="#" class="menu-item" data-tab="compressor">
+          <i class="fa-solid fa-file-image"></i>
+          <span>Photo Compressor</span>
+        </a>
+        <a href="#" class="menu-item" data-tab="pptx">
+          <i class="fa-solid fa-file-powerpoint text-orange"></i>
+          <span>Photos to PPTX</span>
+        </a>
+        
+        <div class="menu-section">Productivity Suite</div>
+        <a href="#" class="menu-item" data-tab="gpa">
+          <i class="fa-solid fa-calculator"></i>
+          <span>GPA Calculator</span>
+        </a>
+        <a href="#" class="menu-item" data-tab="timer">
+          <i class="fa-solid fa-clock"></i>
+          <span>Study Timer</span>
+        </a>
+        <a href="#" class="menu-item" data-tab="notes">
+          <i class="fa-solid fa-note-sticky"></i>
+          <span>Quick Notes</span>
+        </a>
+        <a href="#" class="menu-item" data-tab="tasks">
+          <i class="fa-solid fa-list-check"></i>
+          <span>Task Planner</span>
+        </a>
+      </nav>
+      
+      <div class="sidebar-footer">
+        <button id="theme-toggle" class="theme-toggle-btn" title="Toggle theme">
+          <i class="fa-solid fa-moon dark-icon"></i>
+          <i class="fa-solid fa-sun light-icon"></i>
+          <span class="theme-text">Dark Mode</span>
+        </button>
+      </div>
+    </aside>
+    
+    <!-- Main Content Area -->
+    <main class="main-content">
+      <header class="top-bar">
+        <div class="page-title">
+          <h1 id="current-tab-title">PDF &leftrightarrow; Word Converter</h1>
+          <p id="current-tab-desc" class="subtitle">Convert files locally in your browser with full privacy</p>
+        </div>
+        
+        <!-- Live Clock & Status -->
+        <div class="top-bar-meta">
+          <div class="time-widget">
+            <i class="fa-regular fa-calendar"></i>
+            <span id="live-date">June 28, 2026</span>
+          </div>
+          <div class="privacy-badge">
+            <i class="fa-solid fa-shield-halved"></i>
+            <span>Local & Private</span>
+          </div>
+        </div>
+      </header>
+      
+      <!-- Content Pages -->
+      <div class="content-wrapper">
+        
+        <!-- PDF <-> Word Converter Page -->
+        <section id="tab-pdf-word" class="tab-content active">
+          <div class="tools-grid">
+            
+            <!-- PDF to Word Tool Card -->
+            <div class="glass-card tool-card">
+              <div class="card-icon-header text-blue">
+                <i class="fa-solid fa-file-pdf"></i>
+                <i class="fa-solid fa-arrow-right"></i>
+                <i class="fa-solid fa-file-word"></i>
+              </div>
+              <h3>PDF to Word Converter</h3>
+              <p class="card-description">Extract formatted text from PDF documents and download as Microsoft Word (.doc) format.</p>
+              
+              <div class="upload-zone" id="pdf-upload-zone">
+                <input type="file" id="pdf-file-input" accept=".pdf" class="file-input">
+                <div class="upload-prompt">
+                  <i class="fa-solid fa-cloud-arrow-up"></i>
+                  <p class="upload-main-text">Drag and drop your PDF here</p>
+                  <p class="upload-sub-text">or click to browse from device</p>
+                </div>
+                <div class="selected-file-info hidden" id="pdf-file-info">
+                  <i class="fa-solid fa-file-pdf text-red"></i>
+                  <span class="file-name">document.pdf</span>
+                  <span class="file-size">1.2 MB</span>
+                  <button class="remove-file-btn" id="remove-pdf-btn">&times;</button>
+                </div>
+              </div>
+              
+              <div class="actions-panel hidden" id="pdf-actions">
+                <button class="btn btn-primary" id="btn-convert-pdf">
+                  <i class="fa-solid fa-gears spinner-icon hidden" id="pdf-spinner"></i>
+                  <span>Convert to Word</span>
+                </button>
+              </div>
+              
+              <!-- Conversion Progress / Logs -->
+              <div class="status-box hidden" id="pdf-status-box">
+                <div class="progress-bar-container">
+                  <div class="progress-bar" id="pdf-progress"></div>
+                </div>
+                <p class="status-message" id="pdf-status-msg">Extracting page 1 of 5...</p>
+              </div>
+            </div>
+            
+            <!-- Word to PDF Tool Card -->
+            <div class="glass-card tool-card">
+              <div class="card-icon-header text-purple">
+                <i class="fa-solid fa-file-word"></i>
+                <i class="fa-solid fa-arrow-right"></i>
+                <i class="fa-solid fa-file-pdf"></i>
+              </div>
+              <h3>Word to PDF Converter</h3>
+              <p class="card-description">Upload your Microsoft Word document (.docx), preview it inside our editor, edit layout, and convert to PDF.</p>
+              
+              <div class="upload-zone" id="word-upload-zone">
+                <input type="file" id="word-file-input" accept=".docx" class="file-input">
+                <div class="upload-prompt">
+                  <i class="fa-solid fa-cloud-arrow-up"></i>
+                  <p class="upload-main-text">Drag and drop your DOCX here</p>
+                  <p class="upload-sub-text">or click to browse from device</p>
+                </div>
+                <div class="selected-file-info hidden" id="word-file-info">
+                  <i class="fa-solid fa-file-word text-blue"></i>
+                  <span class="file-name">report.docx</span>
+                  <span class="file-size">800 KB</span>
+                  <button class="remove-file-btn" id="remove-word-btn">&times;</button>
+                </div>
+              </div>
+              
+              <div class="actions-panel hidden" id="word-actions">
+                <button class="btn btn-purple" id="btn-convert-word">
+                  <i class="fa-solid fa-gears spinner-icon hidden" id="word-spinner"></i>
+                  <span>Load Document & Preview</span>
+                </button>
+              </div>
+            </div>
+          </div>
+          
+          <!-- Shared Preview Editor Panel for Word to PDF -->
+          <div class="glass-card hidden" id="document-editor-card">
+            <div class="editor-header">
+              <div class="editor-title">
+                <i class="fa-solid fa-pen-nib"></i>
+                <span>Document Live Preview & Editor</span>
+              </div>
+              <div class="editor-actions">
+                <button class="btn btn-sm btn-secondary" id="editor-clear-btn">Clear</button>
+                <button class="btn btn-sm btn-purple" id="editor-download-pdf">
+                  <i class="fa-solid fa-file-pdf"></i> Download PDF
+                </button>
+              </div>
+            </div>
+            
+            <div class="editor-toolbar">
+              <button class="toolbar-btn" data-command="bold" title="Bold"><i class="fa-solid fa-bold"></i></button>
+              <button class="toolbar-btn" data-command="italic" title="Italic"><i class="fa-solid fa-italic"></i></button>
+              <button class="toolbar-btn" data-command="underline" title="Underline"><i class="fa-solid fa-underline"></i></button>
+              <span class="toolbar-divider"></span>
+              <button class="toolbar-btn" data-command="justifyLeft" title="Align Left"><i class="fa-solid fa-align-left"></i></button>
+              <button class="toolbar-btn" data-command="justifyCenter" title="Align Center"><i class="fa-solid fa-align-center"></i></button>
+              <button class="toolbar-btn" data-command="justifyRight" title="Align Right"><i class="fa-solid fa-align-right"></i></button>
+              <span class="toolbar-divider"></span>
+              <button class="toolbar-btn" data-command="insertUnorderedList" title="Bullet List"><i class="fa-solid fa-list-ul"></i></button>
+              <button class="toolbar-btn" data-command="insertOrderedList" title="Numbered List"><i class="fa-solid fa-list-ol"></i></button>
+            </div>
+            
+            <!-- Rich Text Editor Container -->
+            <div class="rich-editor-body" id="rich-editor" contenteditable="true">
+              <p>Your parsed Word document will appear here. You can edit the text and layout directly before printing/downloading as a PDF.</p>
+            </div>
+          </div>
+        </section>
+        
+        <!-- Resume ATS Checker Page -->
+        <section id="tab-ats-checker" class="tab-content">
+          <div class="tools-grid">
+            
+            <!-- Upload & Setup Card -->
+            <div class="glass-card">
+              <h3>Upload Resume for ATS Screening</h3>
+              <p class="subtitle">Check if applicant tracking systems would reject your resume due to formatting, contact details, structure, or lack of keywords.</p>
+              
+              <div class="upload-zone" id="ats-upload-zone">
+                <input type="file" id="ats-file-input" accept=".pdf,.docx" class="file-input">
+                <div class="upload-prompt">
+                  <i class="fa-solid fa-file-invoice text-red" style="font-size: 2.5rem; margin-bottom: 1rem; color: var(--red);"></i>
+                  <p class="upload-main-text">Drag & drop your Resume here</p>
+                  <p class="upload-sub-text">supports PDF or DOCX format</p>
+                </div>
+                <div class="selected-file-info hidden" id="ats-file-info">
+                  <i class="fa-solid fa-file-invoice text-red"></i>
+                  <span class="file-name">resume.pdf</span>
+                  <span class="file-size">120 KB</span>
+                  <button class="remove-file-btn" id="remove-ats-file-btn">&times;</button>
+                </div>
+              </div>
+              
+              <div class="config-controls margin-t-2">
+                <div class="control-group">
+                  <label for="ats-job-desc">Target Job Description (Optional for Keyword Match)</label>
+                  <textarea id="ats-job-desc" class="custom-input" style="height: 100px; resize: vertical; padding: 0.5rem;" placeholder="Paste the job description here to check for critical missing keywords..."></textarea>
+                </div>
+                
+                <div class="control-group margin-t-1">
+                  <label for="ats-text-paste">Or Paste Resume Text Directly</label>
+                  <textarea id="ats-text-paste" class="custom-input" style="height: 100px; resize: vertical; padding: 0.5rem;" placeholder="Alternatively, paste your plain resume text here for instant analysis..."></textarea>
+                </div>
+
+                <button class="btn btn-red w-full margin-t-2" id="btn-analyze-ats">
+                  <i class="fa-solid fa-magnifying-glass"></i> Scan Resume for Rejection Risks
+                </button>
+              </div>
+            </div>
+            
+            <!-- Results Dashboard Card -->
+            <div class="glass-card flex-column" id="ats-results-card">
+              <h3>ATS Audit Report</h3>
+              
+              <div class="ats-empty-report" id="ats-empty-report" style="flex-grow: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; color: var(--text-muted); gap: 1rem; border: 2px dashed var(--border-color); border-radius: 12px; padding: 2rem;">
+                <i class="fa-solid fa-ban" style="font-size: 2.5rem; opacity: 0.5;"></i>
+                <p>Upload a file or paste text on the left, then click "Scan Resume" to generate the audit report.</p>
+              </div>
+              
+              <div class="ats-full-report hidden" id="ats-full-report" style="display: flex; flex-direction: column; gap: 1.5rem;">
+                <!-- Rejection Risk Widget -->
+                <div class="ats-risk-widget" style="display: flex; align-items: center; justify-content: space-between; padding: 1rem; border-radius: 12px; background: rgba(0,0,0,0.03);">
+                  <div>
+                    <div style="font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-muted); font-weight: 700;">Rejection Risk</div>
+                    <h4 id="ats-risk-level" style="font-size: 1.3rem; margin-top: 0.25rem;">High Risk</h4>
+                  </div>
+                  <div style="text-align: right;">
+                    <div style="font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-muted); font-weight: 700;">ATS Score</div>
+                    <h4 id="ats-score-pct" style="font-size: 1.8rem; margin-top: 0.25rem; font-weight: 800;" class="text-red">45%</h4>
+                  </div>
+                </div>
+                
+                <!-- Quick stats -->
+                <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.5rem; text-align: center;">
+                  <div style="background: rgba(0,0,0,0.02); padding: 0.5rem; border-radius: 8px;">
+                    <div style="font-size: 0.75rem; color: var(--text-muted);">Word Count</div>
+                    <strong id="ats-stat-words" style="font-size: 1rem; display: block; margin-top: 0.2rem;">0</strong>
+                  </div>
+                  <div style="background: rgba(0,0,0,0.02); padding: 0.5rem; border-radius: 8px;">
+                    <div style="font-size: 0.75rem; color: var(--text-muted);">Format Check</div>
+                    <strong id="ats-stat-format" style="font-size: 1rem; display: block; margin-top: 0.2rem;" class="text-green">Valid</strong>
+                  </div>
+                  <div style="background: rgba(0,0,0,0.02); padding: 0.5rem; border-radius: 8px;">
+                    <div style="font-size: 0.75rem; color: var(--text-muted);">Keyword Match</div>
+                    <strong id="ats-stat-keywords" style="font-size: 1rem; display: block; margin-top: 0.2rem;">-</strong>
+                  </div>
+                </div>
+
+                <!-- Report lists -->
+                <div class="ats-report-lists" style="display: flex; flex-direction: column; gap: 1rem;">
+                  <!-- Red Flags -->
+                  <div>
+                    <h4 style="font-size: 0.9rem; margin-bottom: 0.5rem; color: var(--red); display: flex; align-items: center; gap: 0.5rem;">
+                      <i class="fa-solid fa-circle-xmark"></i> Red Flags (Immediate Rejection Risks)
+                    </h4>
+                    <ul id="ats-red-flags" style="padding-left: 1.2rem; display: flex; flex-direction: column; gap: 0.35rem; font-size: 0.85rem; line-height: 1.4;">
+                      <!-- Dynamic red flags go here -->
+                    </ul>
+                  </div>
+                  
+                  <!-- Warnings -->
+                  <div>
+                    <h4 style="font-size: 0.9rem; margin-bottom: 0.5rem; color: #f59e0b; display: flex; align-items: center; gap: 0.5rem;">
+                      <i class="fa-solid fa-triangle-exclamation"></i> Optimization Warnings
+                    </h4>
+                    <ul id="ats-warnings" style="padding-left: 1.2rem; display: flex; flex-direction: column; gap: 0.35rem; font-size: 0.85rem; line-height: 1.4;">
+                      <!-- Dynamic warnings go here -->
+                    </ul>
+                  </div>
+                  
+                  <!-- Passed Checks -->
+                  <div>
+                    <h4 style="font-size: 0.9rem; margin-bottom: 0.5rem; color: var(--green); display: flex; align-items: center; gap: 0.5rem;">
+                      <i class="fa-solid fa-circle-check"></i> Passed Checks
+                    </h4>
+                    <ul id="ats-passed" style="padding-left: 1.2rem; display: flex; flex-direction: column; gap: 0.35rem; font-size: 0.85rem; line-height: 1.4;">
+                      <!-- Dynamic passed items go here -->
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+          </div>
+        </section>
+        
+        <!-- Simple English Translator Page -->
+        <section id="tab-simplifier" class="tab-content">
+          <div class="tools-grid">
+            
+            <!-- Input Panel -->
+            <div class="glass-card">
+              <h3>Complex English Input</h3>
+              <p class="subtitle">Paste essays, research abstracts, or complex academic instructions below to translate them into plain, easy-to-read English.</p>
+              
+              <div class="control-group margin-t-1">
+                <textarea id="simplifier-input" class="custom-input" style="height: 250px; resize: vertical; padding: 0.75rem; font-size: 0.9rem; line-height: 1.5;" placeholder="Paste vocabulary-heavy text, run-on sentences, or complex paragraphs here..."></textarea>
+              </div>
+              
+              <div style="display: flex; gap: 0.5rem; margin-top: 1rem;">
+                <button class="btn btn-secondary btn-sm" id="btn-load-sample-abstract">Load Sample Abstract</button>
+                <button class="btn btn-secondary btn-sm" id="btn-load-sample-prompt">Load Complex Prompt</button>
+              </div>
+
+              <button class="btn btn-primary w-full margin-t-2" id="btn-translate-simple">
+                <i class="fa-solid fa-wand-magic-sparkles"></i> Translate to Simple English
+              </button>
+            </div>
+            
+            <!-- Output Panel -->
+            <div class="glass-card flex-column" id="simplifier-results-card">
+              <h3>Simple English Translation</h3>
+              
+              <div class="simplifier-empty-state" id="simplifier-empty-state" style="flex-grow: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; color: var(--text-muted); gap: 1rem; border: 2px dashed var(--border-color); border-radius: 12px; padding: 2rem;">
+                <i class="fa-solid fa-language" style="font-size: 2.5rem; opacity: 0.5;"></i>
+                <p>Paste text on the left and click "Translate to Simple English" to see the simplified explanation and vocab key.</p>
+              </div>
+              
+              <div class="simplifier-results hidden" id="simplifier-results" style="display: flex; flex-direction: column; gap: 1.5rem;">
+                <!-- Reading Ease & Score card -->
+                <div class="ats-risk-widget" style="display: flex; align-items: center; justify-content: space-between; padding: 1rem; border-radius: 12px; background: rgba(0,0,0,0.03);">
+                  <div>
+                    <div style="font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-muted); font-weight: 700;">Complexity Level</div>
+                    <h4 id="simplifier-difficulty" style="font-size: 1.2rem; margin-top: 0.25rem; color: var(--primary);">Highly Complex</h4>
+                  </div>
+                  <div style="text-align: right;">
+                    <div style="font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-muted); font-weight: 700;">Readability Score</div>
+                    <h4 id="simplifier-score" style="font-size: 1.8rem; margin-top: 0.25rem; font-weight: 800;" class="text-blue">32 / 100</h4>
+                  </div>
+                </div>
+                
+                <!-- Simplified text result -->
+                <div>
+                  <h4 style="font-size: 0.9rem; margin-bottom: 0.5rem; color: var(--primary);"><i class="fa-solid fa-comment-dots"></i> Plain English Translation</h4>
+                  <div class="custom-input" id="simplifier-output-text" style="min-height: 120px; height: auto; background: var(--input-bg); border: 1px solid var(--input-border); padding: 0.75rem; border-radius: 8px; font-size: 0.9rem; line-height: 1.6; white-space: pre-line;">
+                    <!-- Simplified text will go here -->
+                  </div>
+                </div>
+
+                <!-- Key Takeaway Bullets -->
+                <div>
+                  <h4 style="font-size: 0.9rem; margin-bottom: 0.5rem; color: var(--green);"><i class="fa-solid fa-list-check"></i> Key Points (Short Summary)</h4>
+                  <ul id="simplifier-bullets" style="padding-left: 1.2rem; display: flex; flex-direction: column; gap: 0.35rem; font-size: 0.85rem; line-height: 1.4; list-style-type: disc;">
+                    <!-- Dynamic takeaways -->
+                  </ul>
+                </div>
+
+                <!-- Vocabulary Replacements -->
+                <div>
+                  <h4 style="font-size: 0.9rem; margin-bottom: 0.5rem; color: #f59e0b;"><i class="fa-solid fa-book"></i> Hard Words Decoded</h4>
+                  <div class="table-responsive" style="max-height: 150px; overflow-y: auto; border: 1px solid var(--border-color); border-radius: 8px;">
+                    <table class="gpa-table" style="margin: 0; font-size: 0.85rem;">
+                      <thead>
+                        <tr>
+                          <th>Complex Word</th>
+                          <th>Simple Translation</th>
+                        </tr>
+                      </thead>
+                      <tbody id="simplifier-vocab-tbody">
+                        <!-- Vocabulary translations -->
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+          </div>
+        </section>
+        
+        <!-- Photo Compressor Page -->
+        <section id="tab-compressor" class="tab-content">
+          <div class="tools-grid">
+            <!-- Upload and Configuration Card -->
+            <div class="glass-card">
+              <h3>Image Compression Configuration</h3>
+              <p class="subtitle">Optimize image file sizes before uploading to university portals.</p>
+              
+              <div class="upload-zone" id="img-upload-zone">
+                <input type="file" id="img-file-input" accept="image/*" class="file-input">
+                <div class="upload-prompt">
+                  <i class="fa-solid fa-images"></i>
+                  <p class="upload-main-text">Drag and drop your Image here</p>
+                  <p class="upload-sub-text">supports JPEG, PNG, WebP</p>
+                </div>
+                <div class="selected-file-info hidden" id="img-file-info">
+                  <i class="fa-solid fa-file-image text-green"></i>
+                  <span class="file-name">photo.jpg</span>
+                  <span class="file-size">4.5 MB</span>
+                  <button class="remove-file-btn" id="remove-img-btn">&times;</button>
+                </div>
+              </div>
+              
+              <div class="config-controls disabled-overlay" id="compressor-controls">
+                <div class="control-group">
+                  <div class="control-header">
+                    <label for="quality-slider">Quality (Compression Level)</label>
+                    <span id="quality-val">80%</span>
+                  </div>
+                  <input type="range" id="quality-slider" min="10" max="100" value="80" class="slider">
+                </div>
+                
+                <div class="control-group">
+                  <div class="control-header">
+                    <label for="scale-slider">Scale Dimensions</label>
+                    <span id="scale-val">100%</span>
+                  </div>
+                  <input type="range" id="scale-slider" min="10" max="100" value="100" class="slider">
+                </div>
+                
+                <div class="control-row">
+                  <div class="control-group half">
+                    <label for="img-format">Output Format</label>
+                    <select id="img-format" class="custom-select">
+                      <option value="image/jpeg">JPEG (Best for photos)</option>
+                      <option value="image/png">PNG (Best for graphics/text)</option>
+                      <option value="image/webp">WebP (Best efficiency)</option>
+                    </select>
+                  </div>
+                  
+                  <div class="control-group half">
+                    <label>Original Dimensions</label>
+                    <div class="static-val" id="orig-dimensions">-</div>
+                  </div>
+                </div>
+                
+                <button class="btn btn-green w-full margin-t-2" id="btn-compress">
+                  <i class="fa-solid fa-wand-magic-sparkles"></i> Compress Image
+                </button>
+              </div>
+            </div>
+            
+            <!-- Comparison & Preview Card -->
+            <div class="glass-card flex-column">
+              <h3>Real-Time Preview</h3>
+              <div class="preview-comparison-container">
+                <div class="preview-panel" id="original-preview-panel">
+                  <div class="panel-label">Original</div>
+                  <div class="preview-img-wrapper">
+                    <img id="img-orig-preview" src="" alt="Original Preview" class="hidden">
+                    <div class="preview-placeholder"><i class="fa-regular fa-image"></i><p>Original preview</p></div>
+                  </div>
+                  <div class="preview-meta" id="orig-size">-</div>
+                </div>
+                
+                <div class="preview-panel" id="compressed-preview-panel">
+                  <div class="panel-label bg-green">Compressed</div>
+                  <div class="preview-img-wrapper">
+                    <img id="img-comp-preview" src="" alt="Compressed Preview" class="hidden">
+                    <div class="preview-placeholder"><i class="fa-regular fa-image"></i><p>Compressed preview</p></div>
+                  </div>
+                  <div class="preview-meta" id="comp-size">-</div>
+                </div>
+              </div>
+              
+              <div class="compression-results hidden" id="compression-results-panel">
+                <div class="result-metric">
+                  <span class="metric-label">Reduction:</span>
+                  <span class="metric-val text-green" id="reduction-ratio">-75%</span>
+                </div>
+                <button class="btn btn-primary" id="btn-download-compressed">
+                  <i class="fa-solid fa-download"></i> Download Compressed Photo
+                </button>
+              </div>
+            </div>
+          </div>
+        </section>
+        
+        <!-- Photos to PPTX Page -->
+        <section id="tab-pptx" class="tab-content">
+          <div class="tools-grid">
+            
+            <!-- Upload & Setup Card -->
+            <div class="glass-card">
+              <h3>Create PowerPoint from Photos</h3>
+              <p class="subtitle">Convert multiple images into a professional presentation. Reorder, add titles, and configure slides.</p>
+              
+              <div class="upload-zone" id="pptx-upload-zone">
+                <input type="file" id="pptx-file-input" accept="image/*" multiple class="file-input">
+                <div class="upload-prompt">
+                  <i class="fa-solid fa-file-powerpoint text-orange" style="font-size: 2.5rem; margin-bottom: 1rem; color: #f97316;"></i>
+                  <p class="upload-main-text">Drag and drop photos here</p>
+                  <p class="upload-sub-text">select multiple JPG, PNG, WebP images</p>
+                </div>
+              </div>
+              
+              <div class="config-controls margin-t-2" id="pptx-controls">
+                <div class="control-group">
+                  <label for="pptx-title-input">Presentation Title Slide (Optional)</label>
+                  <input type="text" id="pptx-title-input" class="custom-input" placeholder="e.g. History Project Slides">
+                </div>
+
+                <div class="control-row">
+                  <div class="control-group half">
+                    <label for="pptx-layout">Slide Layout</label>
+                    <select id="pptx-layout" class="custom-select">
+                      <option value="fit" selected>Fit to Slide (Aspect Ratio)</option>
+                      <option value="fill">Fill Slide (Crop / Stretch)</option>
+                      <option value="title-image">Title + Image (Text overlay)</option>
+                    </select>
+                  </div>
+                  
+                  <div class="control-group half">
+                    <label for="pptx-ratio">Aspect Ratio</label>
+                    <select id="pptx-ratio" class="custom-select">
+                      <option value="16:9" selected>Widescreen (16:9)</option>
+                      <option value="4:3">Standard (4:3)</option>
+                    </select>
+                  </div>
+                </div>
+
+                <div class="control-row">
+                  <div class="control-group half">
+                    <label for="pptx-bg-color">Slide Background (Plain)</label>
+                    <select id="pptx-bg-color" class="custom-select">
+                      <option value="FFFFFF" selected>Plain White (Clean)</option>
+                      <option value="000000">Plain Black (High Contrast)</option>
+                      <option value="1E293B">Slate Blue (Dark)</option>
+                      <option value="F1F5F9">Off-White (Soft Light)</option>
+                    </select>
+                  </div>
+                  
+                  <div class="control-group half">
+                    <label for="pptx-title-color">Title Text Color</label>
+                    <select id="pptx-title-color" class="custom-select">
+                      <option value="333333" selected>Dark Gray / Black</option>
+                      <option value="4F46E5">Indigo Blue</option>
+                      <option value="FFFFFF">White</option>
+                    </select>
+                  </div>
+                </div>
+
+                <button class="btn btn-purple w-full margin-t-2" id="btn-generate-pptx" disabled>
+                  <i class="fa-solid fa-file-powerpoint"></i> Compile & Download PowerPoint
+                </button>
+              </div>
+            </div>
+            
+            <!-- Slides Manager Card -->
+            <div class="glass-card flex-column">
+              <div class="flex-row space-between align-center">
+                <h3>Slides Manager</h3>
+                <span class="badge" id="pptx-slide-count" style="background: var(--active-menu-bg); color: var(--primary); padding: 0.25rem 0.75rem; border-radius: 20px; font-size: 0.8rem; font-weight: 600;">0 Slides</span>
+              </div>
+              <p class="subtitle">Preview your slides, customize sequence, delete, and add custom slide titles.</p>
+              
+              <div class="pptx-slides-list-wrapper" style="flex-grow: 1; display: flex; flex-direction: column; min-height: 250px;">
+                <div class="empty-state" id="pptx-empty-state" style="flex-grow: 1; display: flex; flex-direction: column; align-center: center; justify-content: center; text-align: center; color: var(--text-muted); gap: 1rem; border: 2px dashed var(--border-color); border-radius: 12px; padding: 2rem;">
+                  <i class="fa-solid fa-images" style="font-size: 2.5rem; opacity: 0.5;"></i>
+                  <p>No photos uploaded yet. Drag images or browse using the upload zone.</p>
+                </div>
+                <div class="pptx-slides-list hidden" id="pptx-slides-list" style="display: flex; flex-direction: column; gap: 0.75rem; max-height: 400px; overflow-y: auto; padding-right: 0.25rem;">
+                  <!-- Dynamic slides list items will go here -->
+                </div>
+              </div>
+            </div>
+            
+          </div>
+        </section>
+        
+        <!-- GPA Calculator Page -->
+        <section id="tab-gpa" class="tab-content">
+          <div class="tools-grid">
+            <!-- GPA Entry Panel -->
+            <div class="glass-card col-span-2">
+              <div class="flex-row space-between">
+                <h3>Semester GPA Calculator</h3>
+                <button class="btn btn-sm btn-secondary" id="btn-clear-gpa">Reset All</button>
+              </div>
+              <p class="subtitle">Quickly compute your semester average by inserting your course names, letter grades, and credit hours.</p>
+              
+              <div class="table-responsive">
+                <table class="gpa-table" id="gpa-table">
+                  <thead>
+                    <tr>
+                      <th>Course Name</th>
+                      <th>Credit Hours</th>
+                      <th>Grade Received</th>
+                      <th>Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody id="gpa-tbody">
+                    <!-- Dynamic Rows Go Here -->
+                  </tbody>
+                </table>
+              </div>
+              
+              <div class="gpa-table-actions">
+                <button class="btn btn-secondary btn-sm" id="btn-add-course">
+                  <i class="fa-solid fa-plus"></i> Add Course
+                </button>
+              </div>
+            </div>
+            
+            <!-- Cumulative & Final Summary Panel -->
+            <div class="glass-card">
+              <h3>GPA Summary</h3>
+              <div class="gpa-dashboard">
+                <div class="gpa-dial">
+                  <span class="gpa-val" id="gpa-score">0.00</span>
+                  <span class="gpa-max">/ 4.00</span>
+                </div>
+                <div class="gpa-rating" id="gpa-rating">Insert grades to compute</div>
+              </div>
+              
+              <hr class="card-divider">
+              
+              <div class="gpa-cumulative-box">
+                <h4>Cumulative GPA (Optional)</h4>
+                <p class="mini-subtitle">Include previous semesters to calculate your overall cumulative score.</p>
+                <div class="control-row margin-t-1">
+                  <div class="control-group half">
+                    <label for="prev-gpa">Prior Cumulative GPA</label>
+                    <input type="number" id="prev-gpa" min="0" max="4" step="0.01" class="custom-input" placeholder="e.g. 3.45">
+                  </div>
+                  <div class="control-group half">
+                    <label for="prev-credits">Prior Credits Earned</label>
+                    <input type="number" id="prev-credits" min="0" step="0.5" class="custom-input" placeholder="e.g. 45">
+                  </div>
+                </div>
+                <div class="cumulative-result-box hidden" id="cum-result-box">
+                  <span>New Cumulative GPA:</span>
+                  <strong id="cum-gpa-val">3.52</strong>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+        
+        <!-- Study Timer (Pomodoro) Page -->
+        <section id="tab-timer" class="tab-content">
+          <div class="tools-grid-split">
+            <!-- Timer Clock Panel -->
+            <div class="glass-card flex-column align-center justify-center relative overflow-hidden">
+              <div class="timer-ambient-bg" id="timer-ambient"></div>
+              
+              <div class="timer-mode-selector">
+                <button class="timer-mode-btn active" data-mode="pomodoro">Study Focus</button>
+                <button class="timer-mode-btn" data-mode="short-break">Short Break</button>
+                <button class="timer-mode-btn" data-mode="long-break">Long Break</button>
+              </div>
+              
+              <div class="timer-circular-progress">
+                <svg class="progress-ring" width="280" height="280">
+                  <circle class="progress-ring-circle-bg" stroke="rgba(255, 255, 255, 0.05)" stroke-width="8" fill="transparent" r="130" cx="140" cy="140"/>
+                  <circle id="timer-progress-bar" class="progress-ring-circle" stroke="var(--primary)" stroke-width="8" stroke-dasharray="816.8" stroke-dashoffset="0" fill="transparent" r="130" cx="140" cy="140"/>
+                </svg>
+                <div class="timer-display">
+                  <span id="timer-time">25:00</span>
+                  <span id="timer-label">Stay Focused</span>
+                </div>
+              </div>
+              
+              <div class="timer-controls">
+                <button class="btn btn-circle" id="timer-reset" title="Reset Timer">
+                  <i class="fa-solid fa-rotate-left"></i>
+                </button>
+                <button class="btn btn-circle btn-lg btn-primary" id="timer-play-pause" title="Start/Pause">
+                  <i class="fa-solid fa-play" id="play-icon"></i>
+                  <i class="fa-solid fa-pause hidden" id="pause-icon"></i>
+                </button>
+                <button class="btn btn-circle" id="timer-skip" title="Skip Session">
+                  <i class="fa-solid fa-forward-step"></i>
+                </button>
+              </div>
+            </div>
+            
+            <!-- Timer Stats & Settings Panel -->
+            <div class="glass-card">
+              <h3>Timer Configuration</h3>
+              <p class="subtitle">Personalize your Pomodoro cycles to match your optimal working pattern.</p>
+              
+              <div class="timer-settings">
+                <div class="control-group">
+                  <label for="focus-duration">Focus Duration (minutes)</label>
+                  <input type="number" id="focus-duration" min="1" max="180" value="25" class="custom-input">
+                </div>
+                <div class="control-group">
+                  <label for="short-break-duration">Short Break (minutes)</label>
+                  <input type="number" id="short-break-duration" min="1" max="60" value="5" class="custom-input">
+                </div>
+                <div class="control-group">
+                  <label for="long-break-duration">Long Break (minutes)</label>
+                  <input type="number" id="long-break-duration" min="1" max="60" value="15" class="custom-input">
+                </div>
+              </div>
+              
+              <hr class="card-divider">
+              
+              <h3>Today's Progress</h3>
+              <div class="timer-stats-grid">
+                <div class="stat-box">
+                  <span class="stat-num" id="pomodoro-count">0</span>
+                  <span class="stat-lbl">Focus Cycles Done</span>
+                </div>
+                <div class="stat-box">
+                  <span class="stat-num" id="total-focus-time">0m</span>
+                  <span class="stat-lbl">Total Focus Time</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+        
+        <!-- Quick Notes Page -->
+        <section id="tab-notes" class="tab-content">
+          <div class="notes-container">
+            <!-- Sidebar with list of Notes -->
+            <div class="glass-card notes-list-card">
+              <div class="flex-row space-between align-center">
+                <h3>Notes List</h3>
+                <button class="btn btn-circle btn-sm btn-primary" id="btn-add-note" title="New Note">
+                  <i class="fa-solid fa-plus"></i>
+                </button>
+              </div>
+              <div class="notes-search-wrapper">
+                <i class="fa-solid fa-magnifying-glass"></i>
+                <input type="text" id="notes-search" class="search-input" placeholder="Search notes...">
+              </div>
+              <div class="notes-list" id="notes-list-items">
+                <!-- Notes go here dynamically -->
+              </div>
+            </div>
+            
+            <!-- Editor / Reader panel -->
+            <div class="glass-card notes-editor-card">
+              <div class="editor-header">
+                <input type="text" id="note-title-input" class="note-title-input" placeholder="Untitled Note">
+                <div class="note-actions">
+                  <button class="btn btn-sm btn-secondary" id="btn-preview-note" title="Toggle Preview Mode">
+                    <i class="fa-regular fa-eye"></i> <span>Preview</span>
+                  </button>
+                  <button class="btn btn-sm btn-secondary" id="btn-download-note" title="Download note file">
+                    <i class="fa-solid fa-download"></i> <span>Export</span>
+                  </button>
+                  <button class="btn btn-sm btn-red-outline" id="btn-delete-note" title="Delete Note">
+                    <i class="fa-regular fa-trash-can"></i>
+                  </button>
+                </div>
+              </div>
+              
+              <div class="note-editor-wrapper">
+                <!-- Editor input -->
+                <textarea id="note-textarea" class="note-textarea" placeholder="Start typing details or paste markdown syntax here... (auto-saved)"></textarea>
+                <!-- Markdown preview window -->
+                <div id="note-preview" class="note-preview hidden"></div>
+              </div>
+            </div>
+          </div>
+        </section>
+        
+        <!-- Task Planner Page -->
+        <section id="tab-tasks" class="tab-content">
+          <div class="tasks-layout">
+            
+            <!-- Task Creation Form -->
+            <div class="glass-card tasks-form-card">
+              <h3>Create New Task</h3>
+              <p class="subtitle">Add items to complete, set key deadlines, and organize your syllabus.</p>
+              
+              <form id="task-form" class="margin-t-1">
+                <div class="control-group">
+                  <label for="task-title">Task Title</label>
+                  <input type="text" id="task-title" class="custom-input" placeholder="e.g. History essay submission" required>
+                </div>
+                
+                <div class="control-row">
+                  <div class="control-group half">
+                    <label for="task-category">Category</label>
+                    <select id="task-category" class="custom-select">
+                      <option value="Syllabus/Study">Syllabus / Study</option>
+                      <option value="Assignment">Assignment</option>
+                      <option value="Exam">Exam / Test</option>
+                      <option value="Personal">Personal / Admin</option>
+                    </select>
+                  </div>
+                  <div class="control-group half">
+                    <label for="task-priority">Priority</label>
+                    <select id="task-priority" class="custom-select">
+                      <option value="Low">Low</option>
+                      <option value="Medium" selected>Medium</option>
+                      <option value="High">High</option>
+                    </select>
+                  </div>
+                </div>
+                
+                <div class="control-group">
+                  <label for="task-deadline">Deadline Date</label>
+                  <input type="date" id="task-deadline" class="custom-input" required>
+                </div>
+                
+                <button type="submit" class="btn btn-primary w-full margin-t-1">
+                  <i class="fa-solid fa-plus"></i> Add to Schedule
+                </button>
+              </form>
+            </div>
+            
+            <!-- Task Listing Area -->
+            <div class="glass-card tasks-list-card">
+              <div class="tasks-filter-bar">
+                <h3>Your Schedule</h3>
+                <div class="filter-options">
+                  <button class="filter-btn active" data-filter="all">All</button>
+                  <button class="filter-btn" data-filter="active">Active</button>
+                  <button class="filter-btn" data-filter="completed">Completed</button>
+                </div>
+              </div>
+              
+              <div class="tasks-scroller">
+                <ul class="tasks-list-ul" id="tasks-ul">
+                  <!-- Tasks generated dynamically -->
+                </ul>
+                <div class="empty-state hidden" id="tasks-empty-state">
+                  <i class="fa-solid fa-list-check"></i>
+                  <p>You are completely caught up! No tasks left.</p>
+                </div>
+              </div>
+            </div>
+            
+          </div>
+        </section>
+        
+      </div>
+    </main>
+  </div>
+  
+  <!-- Global Alerts/Toast Notification Container -->
+  <div id="toast-container" class="toast-container"></div>
+  
+  <!-- Audio element for Pomodoro complete -->
+  <audio id="bell-sound" src="https://assets.mixkit.co/active_storage/sfx/2869/2869-84.wav" preload="auto"></audio>
+
+  <!-- External Library Dependencies -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.6.0/mammoth.browser.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/gh/gitbrent/pptxgenjs/dist/pptxgen.bundle.js"></script>
+
+  <!-- Application Logic -->
+  <script src="app.js"></script>
+  <script src="pdf-word.js"></script>
+  <script src="compressor.js"></script>
+  <script src="student-utils.js"></script>
+  <script src="pptx.js"></script>
+  <script src="ats.js"></script>
+  <script src="simplifier.js"></script>
+</body>
+</html>

@@ -1,0 +1,13 @@
+{
+  "name": "student-utility-hub",
+  "version": "1.0.0",
+  "description": "ScholarSync - Student Utility & Document Hub",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build && copy *.js dist && copy icon.jpg dist && copy manifest.json dist && copy sw.js dist",
+    "preview": "vite preview"
+  },
+  "devDependencies": {
+    "vite": "^5.2.0"
+  }
+}
